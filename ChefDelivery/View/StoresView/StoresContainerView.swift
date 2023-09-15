@@ -11,12 +11,19 @@ struct StoresContainerView: View {
     
     var title = "Lojas"
     @State private var ratingFilter = 0;
-    
     @State private var minDistanceFilter: Double = 0
     @State private var maxDistanceFilter: Double = 30
     
+    var stores: [StoreType]
+    
+//    var filteredStores: [StoreType] {
+//        return storesMock.filter { store in
+//            store.stars >= ratingFilter && (store.distance >= minDistanceFilter && store.distance < maxDistanceFilter)
+//        }
+//    }
+    
     var filteredStores: [StoreType] {
-        return storesMock.filter { store in
+        return stores.filter { store in
             store.stars >= ratingFilter && (store.distance >= minDistanceFilter && store.distance < maxDistanceFilter)
         }
     }
@@ -111,7 +118,7 @@ struct StoresContainerView: View {
 
 struct StoresContainerView_Previews: PreviewProvider {
     static var previews: some View {
-        StoresContainerView()
+        StoresContainerView(stores: storesMock)
             .previewLayout(.sizeThatFits)
     }
 }

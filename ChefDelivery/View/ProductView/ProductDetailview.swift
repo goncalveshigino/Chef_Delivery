@@ -12,6 +12,9 @@ struct ProductDetailview: View {
     let product: ProductType
     @State private var productQuatity = 1
  
+    
+    var service = HomeService()
+ 
     var body: some View {
       
         VStack {
@@ -24,7 +27,26 @@ struct ProductDetailview: View {
             
             Spacer()
             
-            ProductDetailButtonView()
+            ProductDetailButtonView {
+                Task {
+                    await confirmOrder()
+                }
+            }
+        }
+    }
+    
+    func confirmOrder() async {
+        do {
+            let result = try await service.confirmOrder(product: product)
+            
+            switch result {
+            case .success(let message):
+                print(message)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }
@@ -36,14 +58,17 @@ struct ProductDetailview_Previews: PreviewProvider {
 }
 
 struct ProductDetailButtonView: View {
+    
+    var onButtonPress: () -> Void
+    
     var body: some View {
         Button {
-            print("Ola ola")
+            onButtonPress()
         } label: {
             HStack {
                 Image(systemName: "cart")
                 
-                Text("adicionar ao carrinho")
+                Text("Enviar pedido")
             }
             .padding(.horizontal, 32)
             .padding(.vertical, 16)
